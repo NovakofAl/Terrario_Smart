@@ -17,13 +17,9 @@ Sull'Arduino è presente uno Shield Oled che permetterà di controllare:
 
 ## Materiali 
 - Arduino Uno
-- Oled Shield
-- DHT..
+- Oled Shield con 5 pulsanti
+- DHT11
 - Tappetino Riscaldante
 - Relay
 - Atomizzatore
 - Terrario
-
-
-
-
