@@ -9,12 +9,12 @@
 
 #define MAXTEMP 29    // Define the max value of temperature that we can have inside the terrarium
 #define MINTEMP 25    // Define the min value of temperature that we can have inside the terrarium
-#define HUMIDITY 60   // Define the correct percentuage of humidity that we need inside the terrarium
+#define HUMIDITY 70   // Define the correct percentuage of humidity that we need inside the terrarium
 
-#define SPECIES "Correlophus Ciliatus" //Define the Species contained in the terrarium
 #define SPECIMENS 1 //Define the number of Specimens
 
 String names[SPECIMENS] = {"Skelly"}; //A Strings array that contains the names of all the Specimens
+const String SPECIES = "Correlophus Ciliatus"; //Define the Species contained in the terrarium
 
 DHT dht(DHTPIN, DHTTYPE);  // Create a DHT object
 
@@ -43,9 +43,9 @@ void setup() {
 void loop() {
   //check if the last temperature check was more than 30 second away
   if(millis() > timeT + deltaT){
-    t = dht.readTemperature();
-    h = dht.readHumidity();
-
+    lcd.clear();
+    temp();
+    
     if(t <= MINTEMP){
       digitalWrite(HEATPIN, HIGH); 
     }
@@ -74,14 +74,20 @@ void loop() {
     
   //show the temperature
   if(inputValue == 1){
+    lcd.clear();
+    lcd.home();
     temp();
   }
   //show the status of heatpad and atomizer
   if(inputValue == 2){
+    lcd.clear();
+    lcd.home();
     status();
   }
   //show the species and the number of specimen
   if(inputValue == 3){
+    lcd.clear();
+    lcd.home();
     info();
   }
 }
@@ -125,15 +131,33 @@ void status(){
 
 void info(){
   lcd.setCursor(0, 0);
-
-  for(int i = 0; i< SPECIMENS; i++){
+  int led_space = 16;   //spaces for character in the screen
+  int counter = 0;      //character printed on the screen
+  for(int i = 0; i < SPECIMENS; i++){
+    counter += names[i].length();
     lcd.print(names[i]);
     delay(500);
+    
+    if(counter >= 14){
+      for(int y = 0; y < names[i].length(); y++){
+        delay(500);
+        lcd.scrollDisplayLeft();
+      }
+    }
+    
     if(i+1 != SPECIMENS){
       lcd.print(", ");
     }
   }
-
+  counter = 0;
+  lcd.home();
   lcd.setCursor(0, 1); 
   lcd.print(SPECIES); 
+  delay(500);
+  if(SPECIES.length() > 16){
+    for(int j = 0; j < SPECIES.length() - 16; j++){
+      delay(500);
+      lcd.scrollDisplayLeft();
+    }
+  }
 }
